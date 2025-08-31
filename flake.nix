@@ -70,7 +70,7 @@
             RUST_SRC_PATH = rustPlatform.rustLibSrc;
           };
 
-        templates.default = {
+        default = {
           src = ./.;
         };
 
