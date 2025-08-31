@@ -69,6 +69,7 @@
             RUST_SRC_PATH = rustPlatform.rustLibSrc;
           };
 
+        defaultTemplate = self.templates.devShell;
       }
     );
 }
