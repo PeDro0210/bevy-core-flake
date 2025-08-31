@@ -1,6 +1,0 @@
-[package]
-name = "bevy_and_raylib_core_flake"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
