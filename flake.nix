@@ -10,6 +10,7 @@
 
   outputs =
     {
+      self,
       nixpkgs,
       utils,
       naersk,
