@@ -2,6 +2,7 @@
 
   # this is mostly just use for dev
   description = "A nix flake for working with Bevy and Raylib ";
+
   inputs = {
     naersk.url = "github:nix-community/naersk/master";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -69,7 +70,11 @@
             RUST_SRC_PATH = rustPlatform.rustLibSrc;
           };
 
-        defaultTemplate = self.templates.devShell;
+        defaultTemplate = {
+          src = ./.;
+        };
+
       }
     );
+
 }
