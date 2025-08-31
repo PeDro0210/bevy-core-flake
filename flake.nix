@@ -1,6 +1,7 @@
 {
 
-  description = "Slash Maze flake nix";
+  # this is mostly just use for dev
+  description = "A nix flake for working with Bevy and Raylib ";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
