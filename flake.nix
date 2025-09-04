@@ -17,28 +17,29 @@
     builtins.foldl' (acc: elem: nixpkgs.lib.recursiveUpdate acc elem) { } (
       builtins.map
         (
-          system:
+          { system, libs }:
           let
 
             pkgs = nixpkgs.legacyPackages.${system};
             naerskLib = pkgs.callPackages naersk { };
 
-            libs = with pkgs; [
-              libGL
-              udev
-              alsa-lib
-              vulkan-loader
-              xorg.libX11
-              xorg.libXcursor
-              xorg.libXi
-              xorg.libXrandr # To use the x11 feature
-              libxkbcommon
-              wayland # To use the wayland feature
-              xorg.libXinerama
-              dbus
-            ];
+            base_lib =
+              with pkgs;
+              [
+                libGL
+                udev
+                vulkan-loader
+                dbus
+                libxkbcommon
+                xorg.libXinerama
+                xorg.libXcursor
+                xorg.libXi
+                xorg.libXrandr
 
-            packages =
+              ]
+              ++ libs;
+
+            std_bin =
               with pkgs;
               [
                 glfw
@@ -51,17 +52,18 @@
                 clippy
                 rustfmt
               ]
-              ++ libs;
+              ++ base_lib;
 
           in
           {
 
+            # declaring the build with the naerskLib flake
             packages.${system}.default = naerskLib.buildPackage {
               src = ./.;
-              buildInputs = libs;
-              nativeBuildInputs = packages;
+              buildInputs = base_lib;
+              nativeBuildInputs = base_lib;
 
-              LD_LIBRARY_PATH = libs;
+              LD_LIBRARY_PATH = std_bin;
 
               LIBCLANG_PATH = "${pkgs.llvmPackages_15.libclang.lib}/lib";
             };
@@ -71,8 +73,20 @@
           }
         )
         [
-          "aarch64-darwin"
-          "x86_64-linux"
+          {
+            system = "aarch64-darwin";
+            libs = [
+              # macos doesn't need
+            ];
+          }
+          {
+            system = "x86_64-linux";
+            libs = [
+              "alsa-lib"
+              "xorg.libX11"
+              "wayland" # To use the wayland feature
+            ];
+          }
         ]
     );
 }
