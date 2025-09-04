@@ -13,61 +13,63 @@
       nixpkgs,
       naersk,
     }:
-    let
-
-      pkgs = nixpkgs.legacyPackages."x86_64-linux";
-      naerskLib = pkgs.callPackages naersk { };
-
-      libs = with pkgs; [
-        libGL
-        udev
-        alsa-lib
-        vulkan-loader
-        xorg.libX11
-        xorg.libXcursor
-        xorg.libXi
-        xorg.libXrandr # To use the x11 feature
-        libxkbcommon
-        wayland # To use the wayland feature
-        xorg.libXinerama
-        dbus
-      ];
-
-      packages =
-        with pkgs;
-        [
-          glfw
-          cmake
-          clang
-          pkg-config
-          cargo
-          rustc
-          rust-analyzer
-          clippy
-          rustfmt
-        ]
-        ++ libs;
-
-    in
-
     # the foldl is for adding each of the packages declarations in to a set
     builtins.foldl' (acc: elem: nixpkgs.lib.recursiveUpdate acc elem) { } (
       builtins.map
-        (system: {
+        (
+          system:
+          let
 
-          packages.${system}.default = naerskLib.buildPackage {
-            src = ./.;
-            buildInputs = libs;
-            nativeBuildInputs = packages;
+            pkgs = nixpkgs.legacyPackages.${system};
+            naerskLib = pkgs.callPackages naersk { };
 
-            LD_LIBRARY_PATH = libs;
+            libs = with pkgs; [
+              libGL
+              udev
+              alsa-lib
+              vulkan-loader
+              xorg.libX11
+              xorg.libXcursor
+              xorg.libXi
+              xorg.libXrandr # To use the x11 feature
+              libxkbcommon
+              wayland # To use the wayland feature
+              xorg.libXinerama
+              dbus
+            ];
 
-            LIBCLANG_PATH = "${pkgs.llvmPackages_15.libclang.lib}/lib";
-          };
+            packages =
+              with pkgs;
+              [
+                glfw
+                cmake
+                clang
+                pkg-config
+                cargo
+                rustc
+                rust-analyzer
+                clippy
+                rustfmt
+              ]
+              ++ libs;
 
-          templates.default.path = ./.;
+          in
+          {
 
-        })
+            packages.${system}.default = naerskLib.buildPackage {
+              src = ./.;
+              buildInputs = libs;
+              nativeBuildInputs = packages;
+
+              LD_LIBRARY_PATH = libs;
+
+              LIBCLANG_PATH = "${pkgs.llvmPackages_15.libclang.lib}/lib";
+            };
+
+            templates.default.path = ./.;
+
+          }
+        )
         [
           "aarch64-darwin"
           "x86_64-linux"
