@@ -1,6 +1,5 @@
 {
-  # this is mostly just use for dev
-  description = "A nix flake for working with Bevy and Raylib ";
+  description = "A nix flake for working with Bevy and Raylib bindings on Rust.";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
@@ -9,9 +8,9 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       naersk,
+      ...
     }:
     # the foldl is for adding each of the packages declarations in to a set
     builtins.foldl' (acc: elem: nixpkgs.lib.recursiveUpdate acc elem) { } (
