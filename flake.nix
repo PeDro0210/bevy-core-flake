@@ -12,6 +12,9 @@
       naersk,
       ...
     }:
+    let
+      general_pkgs = nixpkgs.legacyPackages;
+    in
     # the foldl is for adding each of the packages declarations in to a set
     builtins.foldl' (acc: elem: nixpkgs.lib.recursiveUpdate acc elem) { } (
       builtins.map
@@ -19,7 +22,7 @@
           { system, libs }:
           let
 
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = general_pkgs.${system};
             naerskLib = pkgs.callPackages naersk { };
 
             base_lib =
@@ -34,7 +37,6 @@
                 xorg.libXcursor
                 xorg.libXi
                 xorg.libXrandr
-
               ]
               ++ libs;
 
@@ -50,6 +52,7 @@
                 rust-analyzer
                 clippy
                 rustfmt
+                taplo-lsp # lsp for cargo.toml
               ]
               ++ libs;
 
@@ -80,7 +83,7 @@
           }
           {
             system = "x86_64-linux";
-            libs = with nixpkgs.legacyPackages."x86_64-linux"; [
+            libs = with general_pkgs."x86_64-linux"; [
               alsa-lib
               xorg.libX11
               wayland # To use the wayland feature
