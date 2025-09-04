@@ -51,7 +51,7 @@
                 clippy
                 rustfmt
               ]
-              ++ base_lib;
+              ++ libs;
 
           in
           {
@@ -60,9 +60,9 @@
             packages.${system}.default = naerskLib.buildPackage {
               src = ./.;
               buildInputs = base_lib;
-              nativeBuildInputs = base_lib;
+              nativeBuildInputs = std_bin;
 
-              LD_LIBRARY_PATH = std_bin;
+              LD_LIBRARY_PATH = base_lib;
 
               LIBCLANG_PATH = "${pkgs.llvmPackages_15.libclang.lib}/lib";
             };
@@ -80,10 +80,10 @@
           }
           {
             system = "x86_64-linux";
-            libs = [
-              "alsa-lib"
-              "xorg.libX11"
-              "wayland" # To use the wayland feature
+            libs = with nixpkgs.legacyPackages."x86_64-linux"; [
+              alsa-lib
+              xorg.libX11
+              wayland # To use the wayland feature
             ];
           }
         ]

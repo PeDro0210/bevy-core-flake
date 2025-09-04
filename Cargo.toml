@@ -18,4 +18,4 @@ raylib = { version = "5.5.1" }
 
 
 [target.'cfg(target_os = "linux")'.dependencies]
-raylib = { version = "5.5.1", features = ["wayland","x11"] }
+raylib = { version = "5.5.1", features = ["wayland"] }
