@@ -1,5 +1,4 @@
 {
-
   # this is mostly just use for dev
   description = "A nix flake for working with Bevy and Raylib ";
 
@@ -15,6 +14,7 @@
       naersk,
     }:
     let
+
       pkgs = nixpkgs.legacyPackages."x86_64-linux";
       naerskLib = pkgs.callPackages naersk { };
 
@@ -49,18 +49,28 @@
         ++ libs;
 
     in
-    {
 
-      packages."x86_64-linux".default = naerskLib.buildPackage {
-        src = ./.;
-        buildInputs = libs;
-        nativeBuildInputs = packages;
+    # the foldl is for adding each of the packages declarations in to a set
+    builtins.foldl' (acc: elem: nixpkgs.lib.recursiveUpdate acc elem) { } (
+      builtins.map
+        (system: {
 
-        LD_LIBRARY_PATH = libs;
+          packages.${system}.default = naerskLib.buildPackage {
+            src = ./.;
+            buildInputs = libs;
+            nativeBuildInputs = packages;
 
-        LIBCLANG_PATH = "${pkgs.llvmPackages_15.libclang.lib}/lib";
-      };
+            LD_LIBRARY_PATH = libs;
 
-      templates.default.path = ./.;
-    };
+            LIBCLANG_PATH = "${pkgs.llvmPackages_15.libclang.lib}/lib";
+          };
+
+          templates.default.path = ./.;
+
+        })
+        [
+          "aarch64-darwin"
+          "x86_64-linux"
+        ]
+    );
 }
