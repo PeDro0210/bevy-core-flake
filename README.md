@@ -19,11 +19,5 @@ A nix flake for developing with Bevy / Raylib (or both) on the Rust programming 
   nix flake init -t github:PeDro0210/bevy_and_raylib_core_flake#default
   ```
 
-- Generate cargo lock file
-  ```fish
-  nix-shell -p cargo\
-  cargo generate-lockfile\
-  exit
-  ```
 
 
