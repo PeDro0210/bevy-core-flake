@@ -5,13 +5,6 @@ A nix flake for developing with Bevy / Raylib (or both) on the Rust programming 
 
 ## How to use it
 
-### Cloning the repo
-
-- Clone the repo:
-  ```fish
-  git clone https://github.com/PeDro0210/Bevy-and-raylib-core-flake
-  ```
-
 ### Initializing the template
 
 - Use the 'nix init flake' command
