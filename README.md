@@ -9,7 +9,7 @@ A nix flake for developing with Bevy / Raylib (or both) on the Rust programming 
 
 - Use the 'nix init flake' command
   ```fish
-  nix flake init -t github:PeDro0210/bevy_core_flake#default
+  nix flake init -t github:PeDro0210/bevy-core-flake#default
   ```
 
 
