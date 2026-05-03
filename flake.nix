@@ -45,16 +45,15 @@
                 clang
                 pkg-config
                 rustc
+
+                rust-analyzer
+                taplo
+                clippy
+                cargo
+                rustfmt
+
               ]
               ++ nativeSpecificBuildInputs;
-
-            packages = with pkgs; [
-              rust-analyzer
-              taplo
-              clippy
-              cargo
-              rustfmt
-            ];
 
             LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath buildInputs}";
 
@@ -67,7 +66,6 @@
                 nativeBuildInputs
                 buildInputs
                 LD_LIBRARY_PATH
-                packages
                 ;
               src = ./.;
 
